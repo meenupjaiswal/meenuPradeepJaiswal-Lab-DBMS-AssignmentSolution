@@ -1,0 +1,100 @@
+Execute:
+> select c.cus_gender, count(c.cus_id)
+from customer c 
+inner join orders o on o.cus_id = c.cus_id where o.ord_amount >= 3000
+group by c.cus_gender
+
++ --------------- + -------------------- +
+| cus_gender      | count(c.cus_id)      |
++ --------------- + -------------------- +
+| M               | 1                    |
+| F               | 1                    |
++ --------------- + -------------------- +
+2 rows
+
+Execute:
+> select o.ord_id as 'Order Id', o.cus_id as 'Customer Id', pd.prod_id as 'Product Id', pr.pro_name as 'Product Name', o.ord_amount as 'Amount', o.ord_date as 'Order date'
+from orders o
+inner join product_details pd on pd.prod_id = o.prod_id
+inner join product pr on pr.pro_id = pd.pro_id
+where o.cus_id = 2
+
++ ------------- + ---------------- + --------------- + ----------------- + ----------- + --------------- +
+| Order Id      | Customer Id      | Product Id      | Product Name      | Amount      | Order date      |
++ ------------- + ---------------- + --------------- + ----------------- + ----------- + --------------- +
+| 50            | 2                | 1               | GTA V             | 2000        | 2021-10-06      |
++ ------------- + ---------------- + --------------- + ----------------- + ----------- + --------------- +
+1 rows
+
+Execute:
+> select s.supp_id as 'Supplier Id', s.supp_name as 'Supplier Name', s.supp_city as 'City', s.supp_phone as 'Phone', count(pd.prod_id) as 'No of products'
+from supplier s
+inner join product_details pd on pd.supp_id = s.supp_id
+group by pd.supp_id  having count(pd.prod_id) >1 order by count(pd.prod_id)
+
++ ---------------- + ------------------ + --------- + ---------- + ------------------- +
+| Supplier Id      | Supplier Name      | City      | Phone      | No of products      |
++ ---------------- + ------------------ + --------- + ---------- + ------------------- +
+| 1                | Rajesh Retails     | Delhi     | 1234567890 | 2                   |
++ ---------------- + ------------------ + --------- + ---------- + ------------------- +
+1 rows
+
+Execute:
+> select o.ord_id as 'Order Id' , c.cat_id as 'Category Id' , c.cat_name as 'Category name',o.ord_amount as 'Amount'
+from orders o
+inner join product_details pd on pd.prod_id = o.prod_id
+inner join product pr on pr.pro_id = pd.pro_id
+inner join category c on c.cat_id = pr.cat_id
+having min(o.ord_amount)
+
++ ------------- + ---------------- + ------------------ + ----------- +
+| Order Id      | Category Id      | Category name      | Amount      |
++ ------------- + ---------------- + ------------------ + ----------- +
+| 20            | 3                | GROCERIES          | 1500        |
++ ------------- + ---------------- + ------------------ + ----------- +
+1 rows
+
+Execute:
+> select o.ord_id as 'Order Id', pr.pro_id as 'Product Id', pr.pro_name as 'Product name' 
+from orders o 
+inner join product_details pd on pd.prod_id = o.prod_id
+inner join product pr on pr.pro_id = pd.pro_id
+where o.ord_date > '2021-10-05'
+
++ ------------- + --------------- + ----------------- +
+| Order Id      | Product Id      | Product name      |
++ ------------- + --------------- + ----------------- +
+| 20            | 4               | OATS              |
+| 50            | 1               | GTA V             |
++ ------------- + --------------- + ----------------- +
+2 rows
+
+Execute:
+> select cus_name as 'Customer name', cus_gender as 'Gender' 
+from customer 
+where cus_name like 'A%' or cus_name like '%A'
+
++ ------------------ + ----------- +
+| Customer name      | Gender      |
++ ------------------ + ----------- +
+| AAKASH             | M           |
+| AMAN               | M           |
+| NEHA               | F           |
+| MEGHA              | F           |
++ ------------------ + ----------- +
+4 rows
+
+Execute:
+> call sp_supplier_rating()
+
++ ------------------ + ----------- + ------------ +
+| Supplier Name      | Rating      | Verdict      |
++ ------------------ + ----------- + ------------ +
+| Rajesh Retails     | 5           | Genuine Supplier |
+| Appario Ltd.       | 4           | Average Supplier |
+| Mittal Ltd.        | 4           | Average Supplier |
+| Bansal Retails     | 3           | Average Supplier |
+| Knome products     | 2           | Supplier should not be considered |
++ ------------------ + ----------- + ------------ +
+5 rows
+
